@@ -5,10 +5,43 @@
 # (assuming you're scanning LAN, you wouldn't try to scan external servers wouldn't you?)
 # but WHO CARES.
 
-read -p "Input first 3 octets: " NETWORK
+if [[ "$1" == "--help" || -z "$1" ]]; then
+  cat << EOF
+============================================================
+DumbPing - Stupidly simple /24 network scanner
+============================================================
 
-echo "Scanning $NETWORK.*"
+DESCRIPTION:
+    This script performs a rapid ping sweep of a /24 network
+    range. It runs all processes in the background so its 
+    rather quick. Should take roughly 1 second.
 
+USAGE:
+    ./DumbPing <first_3_octets>
+
+EXAMPLES:
+    ./DumbPing 192.168.1
+    ./DumbPing 8.8.8
+
+TECHNICAL NOTES:
+    - ICMP traffic might be dropped by firewalls.
+    - Uses /tmp/ping_script_hits as a temporary counter.
+
+AUTHOR: piti83
+============================================================
+EOF
+  exit 0
+fi
+
+if [[ ! "$1" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    echo "Error: Invalid or missing argument."
+    echo "Expected format: XXX.XXX.XXX (e.g., 192.168.1)"
+    echo "Type './DumbPing --help' for more info."
+    exit 1
+fi
+
+NETWORK=$1
+> /tmp/ping_script_hits
 
 for i in {0..255} 
 do
