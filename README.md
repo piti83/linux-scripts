@@ -1,4 +1,4 @@
-# linux-scripts
+# scripts
 
 Hi! This is a collection of my scripts that I either use or just write for fun.
 
